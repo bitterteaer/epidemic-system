@@ -1,0 +1,17 @@
+{% extends "mask/base.html" %}
+
+
+{% block title %}疫情防控系统-实时监控{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+                  <img src="{{ video_feed_api }}/mask?real_time={{ real_time }}" height="600px" width="auto">
+              </div>
+              <!-- /.col -->
+          </div>
+          <!-- /.row -->
+    </div><!--/. container-fluid -->
+{% endblock %}

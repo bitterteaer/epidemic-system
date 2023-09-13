@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a href="/mask/realtime" class="nav-link">
+          <i class="nav-icon fa fa-camera"></i>
+          <p>
+            实时监控
+          </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/mask/data_statistics" class="nav-link">
+          <i class="nav-icon fa fa-calculator"></i>
+          <p>
+            数据统计
+          </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/mask/results_cut" class="nav-link">
+          <i class="nav-icon fa fa-film"></i>
+          <p>
+            监控历史图片
+          </p>
+        </a>
+    </li>
+{% endblock %}

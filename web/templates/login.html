@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>疫情防控系统-登录页</title>
+<link type="text/css" href="/static/css/style.css" rel="stylesheet" />
+</head>
+
+<body id="loginq">
+<div class='particle-network-animation'></div>
+    <div class="denglu">
+        <div class="DLlogo">
+            <br><br><br>
+            <div class="Logotext">疫情防控系统</div>
+{#            瑞思国际#}
+        </div>
+
+        <form action="/user/login_in">
+            <div class="zhong">
+                <div class="kuang">
+                    <div class="youhuimg"><img src="/static/img/yonghu.png"width="100%"height="100%"></div>
+                    <input class="logininput" name="username" id="username" placeholder="请输入账号" type="text" value="" />
+                </div>
+                <div class="kuang">
+                    <div class="youhuimg"><img src="/static/img/mima.png"width="100%" height="100%"></div>
+                    <input class="logininput" name="password" id="password" placeholder="请输入密码" type="password" value="" />
+                </div>
+                <div style="text-align: left; margin-left: 10px; margin-top: -10px; color: #FFF;height: 20px;">
+                        <b></b>
+                </div>
+                <!-- <div class="wjmm">忘记密码？</div> -->
+            </div>
+        </form>
+        <div>
+            <button class="positive" type="button" onclick="submit();">登录</button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/script.js"></script>
+<script type="text/javascript">
+    
+    function submit(){
+        layui.use('form', function(){
+            $.post(
+                "/api/user/login_in",
+                {
+                    "username": document.getElementById("username").value,
+                    "password": document.getElementById("password").value
+                },
+                function(data, status){
+                    console.log(data);
+                    if(data.success == true){
+                        window.location.href="/index";
+                    }else{
+                        layer.alert(data.msg, {icon: 5});
+                    }
+                }
+            );
+        });
+    }
+    
+</script>
+</html>

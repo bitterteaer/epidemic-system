@@ -1,0 +1,108 @@
+{% extends "mask/base.html" %}
+
+{% block title %}疫情防控系统-摄像头详情{% endblock %}
+
+{% block style %}
+    <style>
+        img{
+            width:auto;
+            height:160px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+        <!-- SELECT2 EXAMPLE -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h3 class="card-title">{{ camera.ipv4 }}</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+          <form id="my_form" action="/camera/up_data" enctype="multipart/form-data" method="post">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>摄像头地点</label>
+                  <select name="place" id="my_place" class="form-control select2" style="width: 100%;">
+                    <option selected="selected">{{ camera.place }}</option>
+                    {% for i in place %}
+                        <option>{{ i.place }}</option>
+                    {% endfor %}
+                    <option>其他</option>
+                  </select>
+                </div>
+                <!-- /.form-group -->
+                <div class="form-group">
+                  <label>摄像头状态</label>
+                  <select name="state" id="my_state" class="form-control select2" style="width: 100%;">
+                      <option selected="selected">{{ camera.state }}</option>
+                    <option>正常</option>
+                    <option>异常</option>
+                    <option>未知</option>
+                  </select>
+                </div>
+                <!-- /.form-group -->
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label>摄像头照片</label><br>
+                    <img src="{{ camera.picture_path }}" alt="...">
+                    <hr/>
+                    更换图片: <input type="file" name="picture_path">
+                </div>
+                <!-- /.form-group -->
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                    <input hidden type="text" name="id_camera" value="{{ camera.id }}">
+                    <button onclick="up_data()" class="btn-dark">保存修改</button>
+                </div>
+                <!-- /.form-group -->
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </form>
+          </div>
+          <!-- /.card-body -->
+          <div class="card-footer">
+          </div>
+        </div>
+        <!-- /.card -->
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function up_data() {
+        document.getElementById("my_form").submit()
+        {#$.post(#}
+        {#    "/camera/up_data",#}
+        {#    {#}
+        {#        "place": document.getElementById("my_place").options[document.getElementById("my_place").selectedIndex].value,#}
+        {#        "state": document.getElementById("my_state").options[document.getElementById("my_state").selectedIndex].value,#}
+        {#    },#}
+        {#    function (data,state) {#}
+        {#        console.log(data);#}
+        {#    }#}
+        {#);#}
+    }
+</script>
+{% endblock %}

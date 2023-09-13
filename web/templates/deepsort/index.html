@@ -1,0 +1,263 @@
+{% extends "deepsort/base.html" %}
+
+
+{% block title %}疫情防控系统{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-6">
+                  <img src="{{ video_feed_api }}/person?realtime={{ realtime }}" height="300px" width="auto">
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                  <div id="interactive" style="height: 300px;"></div>
+              </div>
+              <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <hr/>
+          <div class="row">
+              <div class="col-md-6">
+                  <div id="zhuzhuangtu" style="height: 300px;"></div>
+              </div>
+              <!-- /.col -->
+              <div class="col-md-6">
+                  <div id="meiguitu" style="height: 300px;"></div>
+              </div>
+              <!-- /.col -->
+          </div>
+          <!-- /.row -->
+    </div><!--/. container-fluid -->
+{% endblock %}
+
+
+{% block script %}
+    <!-- eChartsJS -->
+    <script src="/static/js/echarts.js"></script>
+    <script>
+    // real_time = 1: todo 打开实时刷新数据
+    var real_time = 1;
+    var id_camera = -1;
+
+    // todo 定时刷新堆叠曲线图
+    var chartDom = document.getElementById('interactive');
+    var myChart = echarts.init(chartDom, 'dark');
+    var option;
+    var updateInterval = 500;
+
+    option = {
+      title: {
+        text: 'person count'
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      legend: {
+        data: ['up', 'down', 'all']
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40']
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: 'up',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [120, 132, 101, 134, 90, 230, 210, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 90, 230, 210, 120, 132, 101, 134, 90, 230, 210, 90, 230, 210]
+        },
+        {
+          name: 'down',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [220, 182, 191, 234, 290, 330, 310, 90, 230, 210, 220, 182, 191, 234, 290, 330, 310, 90, 230, 210, 220, 182, 191, 234, 290, 330, 310, 90, 230, 210, 220, 182, 191, 234, 290, 330, 310, 90, 230, 210]
+        },
+        {
+          name: 'all',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [150, 232, 201, 154, 190, 330, 410, 90, 230, 210, 150, 232, 201, 154, 190, 330, 410, 90, 230, 210, 150, 232, 201, 154, 190, 330, 410, 90, 230, 210, 150, 232, 201, 154, 190, 330, 410, 90, 230, 210]
+        },
+      ]
+    };
+
+    // 请求后端得到mask,no mask,all的数据
+    function update() {
+        $.get(
+            "/api/passers_by/get_interactive_data",
+            function (data, state) {
+                // console.log(data);
+                option.series = data.series;
+                option && myChart.setOption(option);
+                setTimeout(update, updateInterval)
+            }
+        );
+    }
+    option && myChart.setOption(option);
+    if(real_time == 1){update();}
+
+    </script>
+    <script>
+    // real_time = 1: todo 打开数据
+    var real_time = 1;
+    var id_camera = -1;
+
+    // todo 柱状图
+    var chartDom_zhuzhuangtu = document.getElementById('zhuzhuangtu');
+    var myChart_zhuzhuangtu = echarts.init(chartDom_zhuzhuangtu, 'dark');
+    var option_zhuzhuangtu;
+    option_zhuzhuangtu = {
+      xAxis: {
+        type: 'category',
+        data: ['up', 'down', 'all']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: [
+            {
+              value: 120,
+              itemStyle: {
+                color: '#12ED93'
+              }
+            },
+            {
+              value: 80,
+              itemStyle: {
+                color: '#3F77FE'
+              }
+            },
+            {
+              value: 200,
+              itemStyle: {
+                color: '#d223e7'
+              }
+            }
+          ],
+          type: 'bar'
+        }
+      ]
+    };
+    function update_zhuzhuangtu() {
+        $.get(
+            "/api/passers_by/get_zhuzhuangtu_data",
+            function (data, state) {
+                // console.log(data);
+                option_zhuzhuangtu.series = [
+                    {
+                      data: data.data,
+                      type: 'bar'
+                    }
+                ]
+                // console.log(option_zhuzhuangtu);
+                option_zhuzhuangtu && myChart_zhuzhuangtu.setOption(option_zhuzhuangtu);
+                setTimeout(update_zhuzhuangtu, updateInterval)
+            }
+        );
+    }
+    option_zhuzhuangtu && myChart_zhuzhuangtu.setOption(option_zhuzhuangtu);
+    if(real_time == 1){update_zhuzhuangtu();}
+
+    // todo 玫瑰图
+    var chartDom_meiguitu = document.getElementById('meiguitu');
+    var myChart_meiguitu = echarts.init(chartDom_meiguitu, 'dark');
+    var option_meiguitu;
+
+    option_meiguitu = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: 'Access From',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: 1048, name: 'Search Engine' },
+            { value: 735, name: 'Direct' },
+            { value: 580, name: 'Email' },
+          ]
+        }
+      ]
+    };
+    function update_meiguitu() {
+        $.get(
+            "/api/passers_by/get_meiguitu_data",
+            function (data, state) {
+                // console.log(data);
+                option_meiguitu.series[0].data = data.data;
+                option_meiguitu && myChart_meiguitu.setOption(option_meiguitu);
+                setTimeout(update_meiguitu, updateInterval)
+            }
+        );
+    }
+    option_meiguitu && myChart_meiguitu.setOption(option_meiguitu);
+    if(real_time == 1){update_meiguitu();}
+
+    </script>
+{% endblock %}

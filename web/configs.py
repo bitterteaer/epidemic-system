@@ -1,0 +1,14 @@
+# 数据库
+HOSTNAME = '47.99.87.197'
+USERNAME = 'g_design'
+PASSWORD = 'CwxNpGjimPCCBGwY'
+PORT = '3306'
+DATABASE = 'g_design'
+
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8'.format(USERNAME, PASSWORD, HOSTNAME, PORT, DATABASE)
+
+JSON_AS_ASCII = False
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+SECRET_KEY = 'jbwkb34asdssaasv64465sageege1sad35a515'
+
+# MAX_CONTENT_LENGTH = 16 * 1024 * 1024

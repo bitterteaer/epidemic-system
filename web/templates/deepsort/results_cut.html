@@ -1,0 +1,109 @@
+{% extends "deepsort/base.html" %}
+
+
+{% block title %}疫情防控系统{% endblock %}
+
+
+{% block link %}
+<link rel="stylesheet" href="/static/plugins/element-ui/index.css">
+{% endblock %}
+
+
+{% block style %}
+    <style>
+        img{
+            width:auto;
+            height:160px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<div id="my_container" class="container-fluid">
+</div>
+<div id="app">
+    <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="total"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+    >
+    </el-pagination>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="/static/plugins/vue/vue.js"></script>
+<script src="/static/plugins/element-ui/index.js"></script>
+<script src="/static/plugins/axios/axios.min.js"></script>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            tableData: null,
+            currentPage: 1,
+            pageSize: 12,
+            total: 0,
+        },
+        computed: {
+        },
+        mounted() {
+            axios.get("/api/capture/get_picture_cut?pic_type=deepsort_person&limit="+this.currentPage+"&size="+this.pageSize).then(response=>{
+                // console.log(response);
+                // this.tableData = response.data.tableData;
+                this.total = response.data.total;
+
+                var data = response.data.tableData;
+                var str_all = "<div class='row'>";
+                var str_tools = "";
+
+                for(var i = 0; i < data.length; i++){
+                    if(i%4 == 0 && i != 0){
+                        str_tools+="</div><hr>";
+                        str_all+=str_tools;
+                        str_tools="<div class='row'>";
+                    }
+                    str_tools+="<div class='col-md-3'>\
+                                    <img src='"+data[i].path+"' alt='...'>\
+                                    <p>"+data[i].create_time+"</p>\
+                                </div>";
+                }str_all+=str_tools;
+
+                document.getElementById("my_container").innerHTML = str_all;
+            })
+        },
+        methods: {
+            handleCurrentChange: function(currentPage){
+                this.currentPage = currentPage;
+
+                axios.get("/api/capture/get_picture_cut?pic_type=deepsort_person&limit="+this.currentPage+"&size="+this.pageSize).then(response=>{
+                    // console.log(response);
+
+                    this.total = response.data.total;
+                    var data = response.data.tableData;
+                    var str_all = "<div class='row'>";
+                    var str_tools = "";
+
+                    for(var i = 0; i < data.length; i++){
+                        if(i%4 == 0 && i != 0){
+                            str_tools+="</div><hr>";
+                            str_all+=str_tools;
+                            str_tools="<div class='row'>";
+                        }
+                        str_tools+="<div class='col-md-3'>\
+                                        <img src='"+data[i].path+"' alt='...'>\
+                                        <p>"+data[i].create_time+"</p>\
+                                    </div>";
+                    }str_all+=str_tools;
+
+                    document.getElementById("my_container").innerHTML = str_all;
+                });
+            },
+        }
+    });
+</script>
+{% endblock %}
